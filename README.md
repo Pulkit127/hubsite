@@ -13,16 +13,16 @@ This is a Laravel-based application named Booking. Below are the steps to set up
 ### Step 1: Clone the repository
 
 <pre>
-<code>git clone https://github.com/Pulkit127/hub.git && 
-cd hub
+<code>git clone https://github.com/Pulkit127/hubsite.git && 
+cd hubsite
 </code>
 
 </pre>
 
-### Step 2: Update Composer dependencies
+### Step 2: Install Composer dependencies
 
 <pre>
-<code>composer update</code>
+<code>composer install</code>
 </pre>
 
 ### Step 3: Set up the environment configuration
@@ -34,7 +34,7 @@ cd hub
 Update the `.env` file with the following:
 
 <pre>
-<code>APP_NAME=HUB
+<code>APP_NAME=HUBSITE
 APP_ENV=local
 APP_KEY=
 APP_DEBUG=false
@@ -51,7 +51,7 @@ Ensure the database settings are properly configured in the `.env` file:
 <code>DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=hub
+DB_DATABASE=hubsite
 DB_USERNAME=root
 DB_PASSWORD=
 </code>
