@@ -36,7 +36,7 @@ class CategoryController extends Controller
         $request->validate(['name' => 'required|string|max:255']);
         $request->merge(['user_id' => Auth::guard('admin')->user()->id]);
         Category::create($request->all());
-        return redirect()->route('categories.index')->with('success', 'Category created successfully!');
+        return redirect()->route('categories.create')->with('success', 'Category created successfully!');
     }
 
     public function edit(Category $category)

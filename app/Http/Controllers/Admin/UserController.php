@@ -43,7 +43,7 @@ class UserController extends Controller
             'role' => 'user'
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User created successfully!');
+        return redirect()->route('users.create')->with('success', 'User created successfully!');
     }
 
     public function edit(User $user)

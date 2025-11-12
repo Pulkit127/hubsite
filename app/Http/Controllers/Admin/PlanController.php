@@ -31,7 +31,7 @@ class PlanController extends Controller
 
         $request->merge(['user_id' => Auth::guard('admin')->user()->id]);
         Plan::create($request->all());
-        return redirect()->route('plans.index')->with('success', 'Plan created successfully!');
+        return redirect()->route('plans.create')->with('success', 'Plan created successfully!');
     }
 
     public function edit(Plan $plan)

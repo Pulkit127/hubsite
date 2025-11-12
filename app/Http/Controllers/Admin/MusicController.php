@@ -39,7 +39,7 @@ class MusicController extends Controller
             'music_file' => $path,
         ]);
 
-        return redirect()->route('music.index')->with('success', 'Music added successfully.');
+        return redirect()->route('music.create')->with('success', 'Music added successfully.');
     }
 
     // Show edit form

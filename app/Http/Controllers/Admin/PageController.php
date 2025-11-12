@@ -36,7 +36,7 @@ class PageController extends Controller
             'content' => $request->contents,
         ]);
 
-        return redirect()->route('pages.index')->with('success', 'Page created successfully.');
+        return redirect()->route('pages.create')->with('success', 'Page created successfully.');
     }
 
     // Show edit page form

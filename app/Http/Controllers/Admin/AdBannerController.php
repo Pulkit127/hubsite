@@ -48,7 +48,7 @@ class AdBannerController extends Controller
             'position' => $request->position,
         ]);
 
-        return redirect()->route('ads.index')->with('success', 'Ad banner created successfully.');
+        return redirect()->route('ads.create')->with('success', 'Ad banner created successfully.');
     }
 
 

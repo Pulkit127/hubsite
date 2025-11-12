@@ -1,7 +1,7 @@
 <div class="card bg-dark text-white border-0 shadow-sm h-100 rounded-4 overflow-hidden">
 
     {{-- 🔒 Lock Overlay (for non-active users) --}}
-    @if(auth()->user()->plan_id === 0)
+    @if(!auth()->check() || auth()->user()->plan_id === 0)
     <div class="locked-overlay d-flex flex-column justify-content-center align-items-center text-center">
         <div class="lock-icon mb-3">
             <i class="bi bi-lock-fill"></i>

@@ -54,7 +54,7 @@ class VideoController extends Controller
 
         $data['user_id'] = Auth::guard('admin')->user()->id;
         Video::create($data);
-        return redirect()->route('videos.index')->with('success', 'Video created successfully!');
+        return redirect()->route('videos.create')->with('success', 'Video created successfully!');
     }
 
     public function edit(Video $video)
