@@ -27,7 +27,7 @@ class PageController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'contents' => 'required|string',
         ]);
 
         Page::create([
@@ -50,7 +50,7 @@ class PageController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
+            'contents' => 'required|string',
         ]);
 
         $page->update([

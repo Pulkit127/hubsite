@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -24,7 +25,7 @@ class FrontAuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        if (Auth::guard('web')->attempt(array_merge($request->only('email', 'password'), ['role' => 'user']))) {
+        if (Auth::guard('web')->attempt(array_merge($request->only('email', 'password'), ['role' => 'user', 'status' => 'active']))) {
             return redirect()->route('frontend.home')->with('success', 'Logged in successfully!');
         }
 
@@ -54,7 +55,8 @@ class FrontAuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => 'user'
+            'role'     => 'user',
+            'status'  => 'active'
         ]);
 
         Auth::guard('web')->login($user); // log in the newly registered user

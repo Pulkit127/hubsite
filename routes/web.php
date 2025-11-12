@@ -14,8 +14,6 @@ use App\Http\Controllers\Admin\MusicController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\AdBannerController;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
@@ -47,6 +45,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('ads', AdBannerController::class);
         Route::resource('pages', PageController::class);
 
+        Route::get('/admin/users/{user}/{status}/status', [UserController::class, 'statusUpdate'])->name('admin.users.status');
+        Route::get('/admin/video/{video}/{status}/status', [VideoController::class, 'statusUpdate'])->name('admin.video.status');
 
         Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });
@@ -60,7 +60,7 @@ Route::prefix('admin')->group(function () {
 */
 
 // Guest user routes (home page available for all)
-Route::get('/', [HomeController::class, 'home'])->name('frontend.home');
+Route::get('/', action: [HomeController::class, 'home'])->name(name: 'frontend.home');
 Route::get('/login', [FrontAuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('login.submit');
 
@@ -68,6 +68,8 @@ Route::get('/register', [FrontAuthController::class, 'registerForm'])->name('reg
 Route::post('/register', [FrontAuthController::class, 'register'])->name('register.submit');
 
 Route::get('/page/{slug}', [HomeController::class, 'show'])->name('page.show');
+Route::post('/contact', action: [HomeController::class, 'contact']);
+
 
 // Authenticated frontend user routes
 Route::middleware('auth')->group(function () {

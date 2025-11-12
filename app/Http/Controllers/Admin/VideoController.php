@@ -91,4 +91,14 @@ class VideoController extends Controller
         $video->delete();
         return redirect()->route('videos.index')->with('success', 'Video deleted successfully!');
     }
+    
+    public function statusUpdate($Video, $status)
+    {
+        $Video = Video::findOrFail($Video);
+
+        // Toggle status
+        $Video->status = $status == 'active' ? 'inactive' : 'active';
+        $Video->save();
+        return redirect()->back()->with('success', 'Video status updated successfully!');
+    }
 }

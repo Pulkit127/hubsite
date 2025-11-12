@@ -87,6 +87,46 @@
       color: #ffc107 !important;
       border-radius: 8px;
     }
+
+    .pagination {
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .pagination .page-link {
+      background-color: #212529;
+      /* dark background */
+      border: 1px solid #343a40;
+      color: #ffc107;
+      /* yellow text */
+      border-radius: 6px;
+      margin: 0 3px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .pagination .page-link:hover {
+      background-color: #ffc107;
+      color: #000;
+      border-color: #ffc107;
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: #ffc107 !important;
+      border-color: #ffc107 !important;
+      color: #000 !important;
+      font-weight: 600;
+    }
+
+    .pagination .page-item.disabled .page-link {
+      background-color: #2c2c2c;
+      color: #6c757d;
+      border-color: #343a40;
+    }
+
+    .anchor-status {
+      text-decoration: auto;
+      color: unset;
+    }
   </style>
 </head>
 
@@ -94,6 +134,7 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar bg-dark text-light d-flex flex-column p-3" style="min-height: 100vh; width: 250px;">
+    <!-- Logo / Title -->
     <div class="mb-4 text-center">
       <h4 class="fw-bold text-warning mb-0">🎬 HUB Admin</h4>
       <small class="text-secondary">Control Panel</small>
@@ -101,52 +142,69 @@
 
     <hr class="border-secondary">
 
-    <nav class="nav flex-column gap-2">
+    <!-- Main Navigation -->
+    <nav class="nav flex-column gap-1">
+
+      <!-- Dashboard -->
       <a href="{{ route('admin.dashboard') }}"
-        class="nav-link text-light sidebar-link {{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}">
+        class="nav-link text-light sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
         <i class="bi bi-speedometer2 me-2"></i> Dashboard
       </a>
 
+      <div class="text-uppercase text-secondary small mt-3 mb-1 ps-2">Content</div>
+
+      <!-- Users -->
       <a href="{{ route('users.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'users.') ? 'active' : '' }}">
-        <i class="bi bi-people me-2"></i> Users
+        class="nav-link text-light sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+        <i class="bi bi-people-fill me-2"></i> Users
       </a>
 
+      <!-- Categories -->
       <a href="{{ route('categories.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'categories.') ? 'active' : '' }}">
-        <i class="bi bi-folder me-2"></i> Categories
+        class="nav-link text-light sidebar-link {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+        <i class="bi bi-folder-fill me-2"></i> Categories
       </a>
 
-      <a href="{{ route('music.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'musics.') ? 'active' : '' }}">
-        <i class="bi bi-music-note me-2"></i> Music
-      </a>
-
+      <!-- Videos -->
       <a href="{{ route('videos.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'videos.') ? 'active' : '' }}">
-        <i class="bi bi-camera-reels me-2"></i> Videos
+        class="nav-link text-light sidebar-link {{ request()->routeIs('videos.*') ? 'active' : '' }}">
+        <i class="bi bi-camera-reels-fill me-2"></i> Videos
       </a>
 
-      <a href="{{ route('ads.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'ads.') ? 'active' : '' }}">
-        <i class="bi bi-credit-card me-2"></i> Ads Banner
+      <!-- Music -->
+      <a href="{{ route('music.index') }}"
+        class="nav-link text-light sidebar-link {{ request()->routeIs('music.*') ? 'active' : '' }}">
+        <i class="bi bi-music-note-beamed me-2"></i> Music
       </a>
 
+      <div class="text-uppercase text-secondary small mt-3 mb-1 ps-2">Monetization</div>
+
+      <!-- Plans -->
       <a href="{{ route('plans.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'plans.') ? 'active' : '' }}">
-        <i class="bi bi-credit-card me-2"></i> Plans
+        class="nav-link text-light sidebar-link {{ request()->routeIs('plans.*') ? 'active' : '' }}">
+        <i class="bi bi-credit-card-2-front me-2"></i> Plans
       </a>
 
+      <!-- Ads Banner -->
+      <a href="{{ route('ads.index') }}"
+        class="nav-link text-light sidebar-link {{ request()->routeIs('ads.*') ? 'active' : '' }}">
+        <i class="bi bi-megaphone-fill me-2"></i> Ads Banner
+      </a>
+
+      <div class="text-uppercase text-secondary small mt-3 mb-1 ps-2">Website</div>
+
+      <!-- Pages -->
       <a href="{{ route('pages.index') }}"
-        class="nav-link text-light sidebar-link {{ Str::startsWith(Route::currentRouteName(), 'pages.') ? 'active' : '' }}">
-        <i class="bi bi-credit-card me-2"></i> Pages
+        class="nav-link text-light sidebar-link {{ request()->routeIs('pages.*') ? 'active' : '' }}">
+        <i class="bi bi-file-earmark-text-fill me-2"></i> Pages
       </a>
 
     </nav>
 
     <hr class="border-secondary mt-auto">
 
-    <a href="{{ route('admin.logout') }}" class="nav-link text-danger sidebar-link text-center">
+    <!-- Logout -->
+    <a href="{{ route('admin.logout') }}" class="nav-link text-danger sidebar-link text-center fw-semibold">
       <i class="bi bi-box-arrow-right me-2"></i> Logout
     </a>
   </div>

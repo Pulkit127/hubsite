@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Video;
 use App\Models\Page;
+use App\Models\Contact;
 
 use Auth;
 
@@ -18,11 +19,11 @@ class HomeController extends Controller
     public function home()
     {
         $categories = Category::with('children')->get();
-        $videos = Video::latest()->take(8)->get();
+        $videos = Video::where('status', 'active')->latest()->take(8)->get();
         $music = Music::latest()->take(8)->get();
         $pages = Page::all();
         $adbanner = AdBanner::all();
-        return view('frontend.home', compact('categories', 'videos', 'music', 'pages','adbanner'));
+        return view('frontend.home', compact('categories', 'videos', 'music', 'pages', 'adbanner'));
     }
 
     // Search videos
@@ -30,7 +31,7 @@ class HomeController extends Controller
     {
         $query = $request->input('query');
         $categories = Category::all();
-        $videos = Video::where('title', 'LIKE', "%{$query}%")->get();
+        $videos = Video::where('status', 'active')->where('title', 'LIKE', "%{$query}%")->get();
         return view('frontend.home', compact('categories', 'videos'));
     }
 
@@ -86,8 +87,13 @@ class HomeController extends Controller
             abort(404);
         }
 
+        // Home page to view
+        if (isset($page->slug) && $page->slug == 'home-page') {
+            return view('frontend.pages.home-page', data: compact('page'));
+        }
+
         // Pass page data to view
-        return view('frontend.pages.static-page', compact('page'));
+        return view('frontend.pages.static-page', data: compact('page'));
     }
 
     public function download($id)
@@ -111,5 +117,19 @@ class HomeController extends Controller
             'Content-Type' => 'video/mp4',
             'Content-Disposition' => 'attachment; filename="' . $video->title . '.mp4"',
         ]);
+    }
+
+    public function contact(Request $request)
+    {
+        // ✅ Validate form data
+        $validated = $request->validate([
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email',
+            'message' => 'required|string|max:2000',
+        ]);
+
+        Contact::create($validated);
+
+        return back()->with('success', 'Thank you for contacting us! We’ll get back to you soon.');
     }
 }

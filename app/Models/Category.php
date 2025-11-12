@@ -13,7 +13,7 @@ class Category extends Model
 
     public function videos()
     {
-        return $this->hasMany(Video::class);
+        return $this->hasMany(Video::class)->where('status', 'active');
     }
     public function music()
     {
