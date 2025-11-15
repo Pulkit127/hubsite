@@ -15,7 +15,14 @@ use Auth;
 
 class HomeController extends Controller
 {
-    // Homepage
+
+
+    
+    public function index()
+    {
+        return view('frontend.pages.home-page');
+    }
+
     public function home()
     {
         $categories = Category::with('children')->get();
@@ -85,11 +92,6 @@ class HomeController extends Controller
         // If not found, show 404
         if (!$page) {
             abort(404);
-        }
-
-        // Home page to view
-        if (isset($page->slug) && $page->slug == 'home-page') {
-            return view('frontend.pages.home-page', data: compact('page'));
         }
 
         // Pass page data to view

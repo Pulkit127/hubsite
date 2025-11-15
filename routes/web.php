@@ -60,7 +60,8 @@ Route::prefix('admin')->group(function () {
 */
 
 // Guest user routes (home page available for all)
-Route::get('/', action: [HomeController::class, 'home'])->name(name: 'frontend.home');
+Route::get('/', action: [HomeController::class, 'index'])->name(name: 'home');
+Route::get('/home', action: [HomeController::class, 'home'])->name(name: 'frontend.home');
 Route::get('/login', [FrontAuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [FrontAuthController::class, 'login'])->name('login.submit');
 
@@ -68,7 +69,7 @@ Route::get('/register', [FrontAuthController::class, 'registerForm'])->name('reg
 Route::post('/register', [FrontAuthController::class, 'register'])->name('register.submit');
 
 Route::get('/page/{slug}', [HomeController::class, 'show'])->name('page.show');
-Route::post('/contact', action: [HomeController::class, 'contact']);
+Route::post('/contact', action: [HomeController::class, 'contact'])->name('contact');
 
 
 // Authenticated frontend user routes
