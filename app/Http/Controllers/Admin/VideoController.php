@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Auth;
 
 class VideoController extends Controller
@@ -41,20 +43,61 @@ class VideoController extends Controller
             'title' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'description' => 'nullable|string',
+            'video_url'  =>  'required',
         ]);
 
-        $data = $request->all();
+        $file = $request->file('video_url');
 
-        if ($request->hasFile('video_url')) {
-            $videoPath = $request->file('video_url')->store('videos', 'public');
-            $data['video_url'] = $videoPath;
-        } else {
-            $data['video_url'] = '';
+        // save original to temporary location
+        $tmpPath = $file->getRealPath();
+
+        $ext = $file->getClientOriginalExtension() ?: 'mp4';
+        $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '-' . time();
+        $finalFilename = $name . '.mp4';
+        $storageRelative = 'videos/' . $finalFilename;
+        $storageAbsolute = storage_path('app/public/' . $storageRelative);
+
+        // ensure dir
+        if (!file_exists(dirname($storageAbsolute))) {
+            mkdir(dirname($storageAbsolute), 0755, true);
         }
 
-        $data['user_id'] = Auth::guard('admin')->user()->id;
-        Video::create($data);
-        return redirect()->route('videos.create')->with('success', 'Video created successfully!');
+        // ffmpeg path -- if ffmpeg is in PATH, use 'ffmpeg' else absolute path like: C:\ffmpeg\bin\ffmpeg.exe
+        $ffmpeg = 'C:\\ffmpeg\\bin\\ffmpeg.exe';
+
+        // compression parameters (good starting point)
+        $crf = 28;                // 18-23 high quality, 24-30 smaller files; tune as needed
+        $preset = 'veryfast';     // slower presets -> better compression
+        $scaleFilter = 'scale=1280:-2'; // resize width to 1280px keeping aspect ratio; remove if you want original resolution
+
+        // build command
+        $cmd = sprintf(
+            '%s -y -i %s -vcodec libx264 -crf %d -preset %s -vf "%s" -acodec aac -b:a 128k -movflags +faststart %s 2>&1',
+            escapeshellarg($ffmpeg),
+            escapeshellarg($tmpPath),
+            $crf,
+            escapeshellarg($preset),
+            $scaleFilter,
+            escapeshellarg($storageAbsolute)
+        );
+
+        exec($cmd, $output, $ret);
+
+        if ($ret !== 0) {
+            Log::error('FFMPEG failed', ['cmd' => $cmd, 'output' => $output]);
+            return back()->with('error', 'Video compression failed. Check server ffmpeg availability and logs.');
+        }
+
+        // save DB record
+        $video = Video::create([
+            'title' => $request->input('title'),
+            'user_id' => Auth::guard('admin')->user()->id ?? null,
+            'video_url' => $storageRelative,
+            'description' => $request->input('description'),
+            'category_id' => $request->input('category_id'),
+        ]);
+
+        return redirect()->route('videos.create')->with('success', 'Video uploaded and compressed!');
     }
 
     public function edit(Video $video)
@@ -91,7 +134,7 @@ class VideoController extends Controller
         $video->delete();
         return redirect()->route('videos.index')->with('success', 'Video deleted successfully!');
     }
-    
+
     public function statusUpdate($Video, $status)
     {
         $Video = Video::findOrFail($Video);
